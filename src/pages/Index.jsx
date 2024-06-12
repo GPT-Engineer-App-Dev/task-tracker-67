@@ -1,88 +1,40 @@
 import { useState } from "react";
-import {
-  Container,
-  VStack,
-  HStack,
-  Input,
-  Button,
-  Checkbox,
-  Text,
-  IconButton,
-  StackDivider,
-  Box,
-} from "@chakra-ui/react";
-import { FaTrash } from "react-icons/fa";
+import { Container, VStack, Heading } from "@chakra-ui/react";
+import TodoInput from "../components/TodoInput";
+import TodoList from "../components/TodoList";
 
 const Index = () => {
-  const [tasks, setTasks] = useState([]);
-  const [task, setTask] = useState("");
+  const [todos, setTodos] = useState([]);
 
-  const addTask = () => {
-    if (task.trim() !== "") {
-      setTasks([...tasks, { text: task, completed: false }]);
-      setTask("");
-    }
+  const addTodo = (text) => {
+    const newTodo = {
+      id: Date.now(),
+      text,
+      completed: false,
+    };
+    setTodos([...todos, newTodo]);
   };
 
-  const deleteTask = (index) => {
-    const newTasks = tasks.filter((_, i) => i !== index);
-    setTasks(newTasks);
-  };
-
-  const toggleTaskCompletion = (index) => {
-    const newTasks = tasks.map((task, i) =>
-      i === index ? { ...task, completed: !task.completed } : task
+  const toggleComplete = (id) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
     );
-    setTasks(newTasks);
+  };
+
+  const deleteTodo = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
   };
 
   return (
-    <Container centerContent maxW="container.md" py={10}>
-      <VStack spacing={4} w="100%">
-        <HStack w="100%">
-          <Input
-            placeholder="Add a new task"
-            value={task}
-            onChange={(e) => setTask(e.target.value)}
-          />
-          <Button onClick={addTask} colorScheme="teal">
-            Add Task
-          </Button>
-        </HStack>
-        <VStack
-          divider={<StackDivider borderColor="gray.200" />}
-          borderColor="gray.200"
-          borderWidth="2px"
-          borderRadius="md"
-          p={4}
-          w="100%"
-          alignItems="stretch"
-        >
-          {tasks.length === 0 ? (
-            <Text align="center">No tasks yet!</Text>
-          ) : (
-            tasks.map((task, index) => (
-              <HStack key={index} spacing={4}>
-                <Checkbox
-                  isChecked={task.completed}
-                  onChange={() => toggleTaskCompletion(index)}
-                />
-                <Text
-                  as={task.completed ? "s" : ""}
-                  flex="1"
-                  textAlign="left"
-                >
-                  {task.text}
-                </Text>
-                <IconButton
-                  aria-label="Delete task"
-                  icon={<FaTrash />}
-                  onClick={() => deleteTask(index)}
-                />
-              </HStack>
-            ))
-          )}
-        </VStack>
+    <Container centerContent maxW="container.md" py={8}>
+      <VStack spacing={8} w="100%">
+        <Heading as="h1" size="xl">
+          Todo App
+        </Heading>
+        <TodoInput addTodo={addTodo} />
+        <TodoList todos={todos} toggleComplete={toggleComplete} deleteTodo={deleteTodo} />
       </VStack>
     </Container>
   );
