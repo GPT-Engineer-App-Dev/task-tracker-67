@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, VStack, Heading } from "@chakra-ui/react";
+import { Container, VStack, Heading, useColorModeValue } from "@chakra-ui/react";
 import TodoInput from "../components/TodoInput";
 import TodoList from "../components/TodoList";
 
@@ -28,7 +28,7 @@ const Index = () => {
   };
 
   return (
-    <Container centerContent maxW="container.md" py={8}>
+    <Container centerContent maxW="container.md" py={8} bg={useColorModeValue("gray.100", "gray.900")}>
       <VStack spacing={8} w="100%">
         <Heading as="h1" size="xl">
           Todo App
